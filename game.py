@@ -1,6 +1,5 @@
 import pygame
 from random import random
-
 import default
 import cfg
 import cells_alive as ca
@@ -21,7 +20,7 @@ clock = pygame.time.Clock()
 
 
 w, h = (100, 100)
-game_state = [[0 for x in range(w)] for y in range(h)] 
+game_state = [[0 for x in range(w)] for y in range(h)]
 game_paused = True
 first_run = True
 next_step = False
@@ -33,25 +32,33 @@ pixel_w = 800 / w
 pixel_h = 800 / h
 
 # draw buttons
-pygame.draw.rect(screen, cfg.GREEN, [800, 0, 200, 100], 0) # start button
-pygame.draw.rect(screen, cfg.RED, [800, 100, 200, 100], 0) # pause button
-pygame.draw.rect(screen, cfg.BLUE, [800, 200, 200, 100], 0) # next step button
-pygame.draw.rect(screen, cfg.GREEN, [800, 300, 200, 100], 0) # clear game_state button
-pygame.draw.rect(screen, cfg.RED, [800, 400, 200, 100], 0) # glider game_state button
-pygame.draw.rect(screen, cfg.BLUE, [800, 500, 200, 100], 0) # random game_state button
-pygame.draw.rect(screen, cfg.GREEN, [800, 600, 200, 100], 0) # rule_1  button
-pygame.draw.rect(screen, cfg.RED, [800, 700, 200, 100], 0) # rule_2  button
+pygame.draw.rect(screen, (169, 169, 169), [
+                 800, 0, 200, 100], 0)  # start button
+pygame.draw.rect(screen, (128, 128, 128), [
+                 800, 100, 200, 100], 0)  # pause button
+pygame.draw.rect(screen, (169, 169, 169), [
+                 800, 200, 200, 100], 0)  # next step button
+# clear game_state button
+pygame.draw.rect(screen, (128, 128, 128), [800, 300, 200, 100], 0)
+# glider game_state button
+pygame.draw.rect(screen, (169, 169, 169), [800, 400, 200, 100], 0)
+# random game_state button
+pygame.draw.rect(screen, (128, 128, 128), [800, 500, 200, 100], 0)
+pygame.draw.rect(screen, (169, 169, 169), [
+                 800, 600, 200, 100], 0)  # rule_1  button
+pygame.draw.rect(screen, (128, 128, 128), [
+                 800, 700, 200, 100], 0)  # rule_2  button
 
 # draw text
 font = pygame.font.SysFont("comicsansms", 32)
-start_text = font.render("Start", True, (0, 128, 0))
-pause_text = font.render("Pause", True, (0, 128, 0))
-next_text = font.render("Next", True, (0, 128, 0))
-clear_text = font.render("Clear", True, (0, 128, 0))
-glider_text = font.render("Glider", True, (0, 128, 0))
-random_text = font.render("Random", True, (0, 128, 0))
-rule1_text = font.render("Rule 1", True, (0, 128, 0))
-rule2_text = font.render("Rule 2", True, (0, 128, 0))
+start_text = font.render("Start", True, (cfg.BLACK))
+pause_text = font.render("Pause", True, (cfg.BLACK))
+next_text = font.render("Next", True, (cfg.BLACK))
+clear_text = font.render("Clear", True, (cfg.BLACK))
+glider_text = font.render("Glider", True, (cfg.BLACK))
+random_text = font.render("Random", True, (cfg.BLACK))
+rule1_text = font.render("Rule 1", True, (cfg.BLACK))
+rule2_text = font.render("Rule 2", True, (cfg.BLACK))
 
 screen.blit(start_text, (850, 30))
 screen.blit(pause_text, (850, 130))
@@ -66,7 +73,7 @@ while not done:
 
     # This limits the while loop to a max of 10 times per second.
     # Leave this out and we will use all CPU we can.
-    clock.tick(40)
+    clock.tick(10)
 
     for event in pygame.event.get():  # User did something
         # If the user clicks with the mouse, get the position
@@ -100,9 +107,10 @@ while not done:
                 elif mouse_y < 800:
                     rule = rules.rule_2
             else:
-                game_state[cfg.mouse_pos[1]][cfg.mouse_pos[0]] = 1 if game_state[cfg.mouse_pos[1]][cfg.mouse_pos[0]] == 0 else 0
+                game_state[cfg.mouse_pos[1]][cfg.mouse_pos[0]
+                                             ] = 1 if game_state[cfg.mouse_pos[1]][cfg.mouse_pos[0]] == 0 else 0
                 drawing = True
-                next_step = True 
+                next_step = True
 
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
@@ -114,29 +122,28 @@ while not done:
             next_step = False
         else:
             continue
-    
+
     # clear game state
     next_game_state = [[0 for x in range(w)] for y in range(h)]
-
 
     for i in range(w):
         for j in range(h):
             if game_state[i][j] == 1:
-                pygame.draw.rect(screen, cfg.BLACK, [j * pixel_w, i * pixel_h, pixel_w, pixel_h], 0)
+                pygame.draw.rect(screen, cfg.BLACK, [
+                                 j * pixel_w, i * pixel_h, pixel_w, pixel_h], 0)
             else:
-                pygame.draw.rect(screen, cfg.WHITE, [j * pixel_w, i * pixel_h, pixel_w, pixel_h], 0)
-            
-            next_game_state[i][j] = rule(game_state[i][j], ca.neighbors_alive(list(game_state), j, i))
-    
+                pygame.draw.rect(screen, cfg.WHITE, [
+                                 j * pixel_w, i * pixel_h, pixel_w, pixel_h], 0)
+
+            next_game_state[i][j] = rule(
+                game_state[i][j], ca.neighbors_alive(list(game_state), j, i))
+
     if not drawing:
         game_state = next_game_state.copy()
     else:
         drawing = False
-    
 
-
-    # Go ahead and update the screen with what we've drawn.
-    # This MUST happen after all the other drawing commands
+    # Draws the screen
     pygame.display.update()
 
 # Be IDLE friendly

@@ -1,3 +1,5 @@
+import pygame
+
 # Define the colors we will use in RGB format
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
